@@ -35,7 +35,7 @@ class CI(object):
 class Travis(CI):
     @staticmethod
     def detect():
-        return environ.get('TRAVIS') == 'true'
+        return environ.get('TRAVIS') == 'true' and environ.get('TRAVIS_PULL_REQUEST') != 'false'
 
     @staticmethod
     def parse():
@@ -74,8 +74,29 @@ class CircleCi(CI):
         )
 
 
+class Appveyor(CI):
+    @staticmethod
+    def detect():
+        return environ.get('APPVEYOR') == 'true'
+
+    @staticmethod
+    def parse():
+        owner = environ['APPVEYOR_ACCOUNT_NAME']
+        repo = environ['APPVEYOR_PROJECT_NAME']
+        issue_id = environ['APPVEYOR_PULL_REQUEST_NUMBER']
+        commit_hash = environ['APPVEYOR_PULL_REQUEST_HEAD_COMMIT']
+        return dict(
+            owner=owner,
+            repo=repo,
+            issue_id=issue_id,
+            commit_hash=commit_hash,
+            language="python",
+            client="pytest/appveyor",
+        )
+
+
 def send_payload(xml_path):
-    for ci in [CircleCi, Travis]:
+    for ci in [CircleCi, Travis, Appveyor]:
         if not ci.detect():
             continue
         data = {"xml": open(xml_path).read()}
