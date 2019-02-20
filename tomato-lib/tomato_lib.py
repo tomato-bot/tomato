@@ -103,10 +103,13 @@ def send_payload(xml_path):
         data.update(ci.parse())
         logger.debug("Detected CI environment - %s", data['client'])
         post(data)
+        return data
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         print('Usage: %s xml_file' % (sys.argv[0]))
         exit(1)
-    send_payload(sys.argv[1])
+    data = send_payload(sys.argv[1])
+    print(data)
+    print(environ)
