@@ -1,7 +1,7 @@
 import json
 import logging
-import tempfile
-from os import environ, remove
+import sys
+from os import environ
 
 try:
     from urllib2 import urlopen, Request
@@ -70,34 +70,18 @@ class CircleCi(CI):
         )
 
 
-state = {
-    "created": False,
-    "path": None,
-}
-
-
-def pytest_load_initial_conftests(args):
-    if '--junit-xml' in args or '--junitxml' in args:
-        return
-    fp = tempfile.NamedTemporaryFile(delete=False)
-    logger.info('Creating tomato.xml file due to missing --junit-xml flag')
-    state["created"] = True
-    state["path"] = fp.name
-    fp.close()
-    args[:] = ["--junit-xml", state["path"]] + args
-
-
-def pytest_sessionfinish(session):
-    if session.config.option.xmlpath is None:
-        logger.warning("Tomato plugin disabled due to missing --junit-xml flag")
-        return
+def send_payload(xml_path):
     for ci in [CircleCi, Travis]:
         if not ci.detect():
             continue
-        data = {"xml": open(session.config.option.xmlpath).read()}
+        data = {"xml": open(xml_path).read()}
         data.update(ci.parse())
         logger.debug("Detected CI environment - %s", data['client'])
         post(data)
-        if state["created"] is True:
-            remove(state["path"])
-        return
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        print('Usage: %s xml_file' % (sys.argv[0]))
+        exit(1)
+    send_payload(sys.argv[1])
