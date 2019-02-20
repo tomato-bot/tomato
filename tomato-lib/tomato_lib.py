@@ -41,10 +41,12 @@ class Travis(CI):
     def parse():
         owner, repo = environ['TRAVIS_REPO_SLUG'].split('/')
         issue_id = environ['TRAVIS_PULL_REQUEST']
+        commit_hash = environ['TRAVIS_COMMIT']
         return dict(
             owner=owner,
             repo=repo,
             issue_id=issue_id,
+            commit_hash=commit_hash,
             language="python",
             client="pytest/travis",
         )
@@ -61,10 +63,12 @@ class CircleCi(CI):
         owner = environ['CIRCLE_PROJECT_USERNAME']
         repo = environ['CIRCLE_PROJECT_REPONAME']
         issue_id = environ['CIRCLE_PULL_REQUEST'].rsplit('/')[-1]
+        commit_hash = environ['CIRCLE_SHA1']
         return dict(
             owner=owner,
             repo=repo,
             issue_id=issue_id,
+            commit_hash=commit_hash,
             language="python",
             client="pytest/circle",
         )
