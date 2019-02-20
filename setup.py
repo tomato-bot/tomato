@@ -3,13 +3,16 @@ from setuptools import find_packages, setup
 install_requires = ["pytest>=3.6.0"]
 
 
-# with open("README.rst") as f:
-#     long_description = f.read()
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except Exception:
+    long_description = ''
 
 setup(
     name="pytest-tomato",
     description="",
-    long_description="",
+    long_description=long_description,
     author="Moshe Zada",
     url="https://github.com/moshe/pytest-tomato",
     platforms=["linux", "osx", "win32"],
