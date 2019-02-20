@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-install_requires = ["pytest>=3.6.0", "tomato-lib"]
+install_requires = ["tomato-lib"]
 
 
 try:
