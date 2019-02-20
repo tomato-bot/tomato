@@ -11,6 +11,7 @@ except Exception:
 
 setup(
     name="pytest-tomato",
+    version='0.1.0',
     description="",
     long_description=long_description,
     author="Moshe Zada",
