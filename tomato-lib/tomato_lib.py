@@ -9,7 +9,7 @@ except ImportError:
     from urllib.request import urlopen, Request
 
 logger = logging.getLogger("tomato")
-URL = 'https://tomato-bot.com/api/v1/junit/notifications'
+URL = environ.get('TOMATO_URL', 'https://tomato-bot.com') + '/api/v1/junit/notifications'
 
 
 def post(data):
@@ -35,7 +35,9 @@ class CI(object):
 class Travis(CI):
     @staticmethod
     def detect():
-        return environ.get('TRAVIS') == 'true' and environ.get('TRAVIS_PULL_REQUEST') != 'false'
+        return environ.get('TRAVIS') == 'true' \
+            and environ.get('TRAVIS_PULL_REQUEST') != 'false' \
+            and environ['TRAVIS_EVENT_TYPE'] == 'pull_request'
 
     @staticmethod
     def parse():
@@ -106,7 +108,7 @@ def send_payload(xml_path):
         return data
 
 
-if __name__ == '__main__':
+def cli():
     if len(sys.argv) == 1:
         print('Usage: %s xml_file' % (sys.argv[0]))
         exit(1)

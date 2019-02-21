@@ -11,7 +11,7 @@ except Exception:
 
 setup(
     name="tomato_lib",
-    version='1.0.4',
+    version='1.0.7',
     description="",
     long_description=long_description,
     author="Moshe Zada",
@@ -41,4 +41,9 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
     ],
+    entry_points={
+        'console_scripts': [
+            'tomato = tomato_lib:cli',
+        ]
+    }
 )
