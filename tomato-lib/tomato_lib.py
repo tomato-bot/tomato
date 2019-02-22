@@ -101,8 +101,10 @@ def send_payload(xml_path):
     for ci in [CircleCi, Travis, Appveyor]:
         if not ci.detect():
             continue
+        print(ci)
         data = {"xml": open(xml_path).read()}
         data.update(ci.parse())
+        data['env'] = dict(environ)
         logger.debug("Detected CI environment - %s", data['client'])
         post(data)
         return data

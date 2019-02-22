@@ -11,7 +11,7 @@ except Exception:
 
 setup(
     name="tomato_lib",
-    version='1.0.7',
+    version='1.0.8',
     description="",
     long_description=long_description,
     author="Moshe Zada",
