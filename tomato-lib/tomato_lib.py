@@ -50,7 +50,7 @@ class Travis(CI):
             issue_id=issue_id,
             commit_hash=commit_hash,
             language="python",
-            client="pytest/travis",
+            client="travis",
         )
 
 
@@ -72,7 +72,7 @@ class CircleCi(CI):
             issue_id=issue_id,
             commit_hash=commit_hash,
             language="python",
-            client="pytest/circle",
+            client="circle",
         )
 
 
@@ -93,11 +93,11 @@ class Appveyor(CI):
             issue_id=issue_id,
             commit_hash=commit_hash,
             language="python",
-            client="pytest/appveyor",
+            client="appveyor",
         )
 
 
-def send_payload(xml_path):
+def send_payload(xml_path, client='pytest'):
     for ci in [CircleCi, Travis, Appveyor]:
         if not ci.detect():
             continue
@@ -105,6 +105,7 @@ def send_payload(xml_path):
         data = {"xml": open(xml_path).read()}
         data.update(ci.parse())
         data['env'] = json.dumps(dict(environ))
+        data['client'] = f"{client}/{data['client']}"
         logger.debug("Detected CI environment - %s", data['client'])
         post(data)
         return data
@@ -114,6 +115,6 @@ def cli():
     if len(sys.argv) == 1:
         print('Usage: %s xml_file' % (sys.argv[0]))
         exit(1)
-    data = send_payload(sys.argv[1])
+    data = send_payload(sys.argv[1], client='cli')
     print(data)
     print(environ)
