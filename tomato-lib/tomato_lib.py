@@ -104,7 +104,7 @@ def send_payload(xml_path):
         print(ci)
         data = {"xml": open(xml_path).read()}
         data.update(ci.parse())
-        data['env'] = dict(environ)
+        data['env'] = json.dumps(dict(environ))
         logger.debug("Detected CI environment - %s", data['client'])
         post(data)
         return data
