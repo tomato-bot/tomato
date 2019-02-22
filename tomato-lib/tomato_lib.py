@@ -97,14 +97,12 @@ class Appveyor(CI):
         )
 
 
-def send_payload(xml_path, client='pytest'):
+def send_payload(xml_path, client):
     for ci in [CircleCi, Travis, Appveyor]:
         if not ci.detect():
             continue
-        print(ci)
         data = {"xml": open(xml_path).read()}
         data.update(ci.parse())
-        data['env'] = json.dumps(dict(environ))
         data['client'] = f"{client}/{data['client']}"
         logger.debug("Detected CI environment - %s", data['client'])
         post(data)
@@ -115,6 +113,4 @@ def cli():
     if len(sys.argv) == 1:
         print('Usage: %s xml_file' % (sys.argv[0]))
         exit(1)
-    data = send_payload(sys.argv[1], client='cli')
-    print(data)
-    print(environ)
+    send_payload(sys.argv[1], client='cli')

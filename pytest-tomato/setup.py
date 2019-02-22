@@ -1,6 +1,7 @@
 from setuptools import find_packages, setup
 
-install_requires = ["tomato-lib==1.0.8"]
+version = '1.0.9'
+install_requires = [f"tomato-lib=={version}"]
 
 
 try:
@@ -11,7 +12,7 @@ except Exception:
 
 setup(
     name="pytest-tomato",
-    version='1.0.8',
+    version=version,
     description="",
     long_description=long_description,
     author="Moshe Zada",

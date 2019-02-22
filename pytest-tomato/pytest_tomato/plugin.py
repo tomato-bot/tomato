@@ -28,7 +28,7 @@ def pytest_sessionfinish(session):
     if session.config.option.xmlpath is None:
         logger.warning("Tomato plugin disabled due to missing --junit-xml flag")
         return
-    send_payload(session.config.option.xmlpath)
+    send_payload(session.config.option.xmlpath, client='pytest')
     if state["created"] is True:
         remove(state["path"])
     return
