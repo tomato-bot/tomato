@@ -97,13 +97,13 @@ class Appveyor(CI):
         )
 
 
-def send_payload(xml_path, client):
+def send_payload(xmls, client):
     for ci in [CircleCi, Travis, Appveyor]:
         if not ci.detect():
             continue
-        data = {"xml": open(xml_path).read()}
+        data = {"xmls": [open(xml).read() for xml in xmls]}
         data.update(ci.parse())
-        data['client'] = f"{client}/{data['client']}"
+        data['client'] = client + "/" + data['client']
         logger.debug("Detected CI environment - %s", data['client'])
         post(data)
         return data
@@ -111,6 +111,10 @@ def send_payload(xml_path, client):
 
 def cli():
     if len(sys.argv) == 1:
-        print('Usage: %s xml_file' % (sys.argv[0]))
+        print('Usage: %s xml_files...' % (sys.argv[0]))
         exit(1)
-    send_payload(sys.argv[1], client='cli')
+    send_payload(sys.argv[1:], client='cli')
+
+
+if __name__ == '__main__':
+    cli()
