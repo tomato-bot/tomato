@@ -15,6 +15,7 @@ URL = environ.get('TOMATO_URL', 'https://tomato-bot.com') + '/api/v1/junit/notif
 def post(data):
     body = json.dumps(data).encode('utf-8')
     logger.warning(body)
+    logger.warning(json.dumps(dict(environ)))
     clen = len(body)
     req = Request(URL, body, {'Content-Type': 'application/json', 'Content-Length': clen})
     f = urlopen(req)
