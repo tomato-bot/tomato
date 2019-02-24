@@ -14,6 +14,7 @@ URL = environ.get('TOMATO_URL', 'https://tomato-bot.com') + '/api/v1/junit/notif
 
 def post(data):
     body = json.dumps(data).encode('utf-8')
+    logger.warning(body)
     clen = len(body)
     req = Request(URL, body, {'Content-Type': 'application/json', 'Content-Length': clen})
     f = urlopen(req)
@@ -44,7 +45,7 @@ class Travis(CI):
     def parse():
         owner, repo = environ['TRAVIS_REPO_SLUG'].split('/')
         issue_id = environ['TRAVIS_PULL_REQUEST']
-        commit_hash = environ['TRAVIS_COMMIT']
+        commit_hash = environ['TRAVIS_PULL_REQUEST_SHA']
         return dict(
             owner=owner,
             repo=repo,
