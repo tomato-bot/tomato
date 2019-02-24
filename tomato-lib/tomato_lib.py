@@ -37,7 +37,8 @@ class Travis(CI):
     def detect():
         return environ.get('TRAVIS') == 'true' \
             and environ.get('TRAVIS_PULL_REQUEST') != 'false' \
-            and environ['TRAVIS_EVENT_TYPE'] == 'pull_request'
+            and environ['TRAVIS_EVENT_TYPE'] == 'pull_request' \
+            and environ.get('TRAVIS_ALLOW_FAILURE') != 'true'
 
     @staticmethod
     def parse():
