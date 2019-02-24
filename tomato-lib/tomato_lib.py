@@ -113,8 +113,9 @@ def send_payload(xmls, client):
 
 
 def cli():
+    logging.basicConfig()
     if len(sys.argv) == 1:
-        print('Usage: %s xml_files...' % (sys.argv[0]))
+        logger.warning('\nUsage: %s xml_files...' % (sys.argv[0]))
         exit(1)
     send_payload(sys.argv[1:], client='cli')
 
