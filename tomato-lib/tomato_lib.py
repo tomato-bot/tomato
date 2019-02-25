@@ -38,9 +38,35 @@ class Travis(CI):
     @staticmethod
     def detect():
         return environ.get('TRAVIS') == 'true' \
-            and environ.get('TRAVIS_PULL_REQUEST') != 'false' \
-            and environ['TRAVIS_EVENT_TYPE'] == 'pull_request' \
-            and environ.get('TRAVIS_ALLOW_FAILURE') != 'true'
+               and environ.get('TRAVIS_PULL_REQUEST') != 'false' \
+               and environ['TRAVIS_EVENT_TYPE'] == 'pull_request' \
+               and environ.get('TRAVIS_ALLOW_FAILURE') != 'true'
+
+    @staticmethod
+    def get_build_name():
+        # https://docs.travis-ci.com/user/environment-variables/#default-environment-variables
+        languages = {
+            "node_js": ("TRAVIS_NODE_VERSION", "Node"),
+            "python": ("TRAVIS_PYTHON_VERSION", "Python"),
+            "ruby": ("TRAVIS_RUBY_VERSION", "Ruby"),
+            "java": ("TRAVIS_JDK_VERSION", "Java"),
+            "php": ("TRAVIS_PHP_VERSION", "PHP"),
+            "dart": ("TRAVIS_DART_VERSION", "Dart"),
+            "go": ("TRAVIS_GO_VERSION", "Go"),
+            "haxe": ("TRAVIS_HAXE_VERSION", "Haxe"),
+            "julia": ("TRAVIS_JULIA_VERSION", "Julia"),
+            "erlang": ("TRAVIS_OTP_RELEASE", "Erlang"),
+            "perl": ("TRAVIS_PERL_VERSION", "Perl"),
+            "r": ("TRAVIS_R_VERSION", "R"),
+            "rust": ("TRAVIS_RUST_VERSION", "Rust"),
+            "scala": ("TRAVIS_SCALA_VERSION", "Scala"),
+        }
+        if environ.get('TRAVIS_JOB_NAME'):
+            return environ['TRAVIS_JOB_NAME']
+        if environ['TRAVIS_LANGUAGE'] in languages:
+            language = languages[environ['TRAVIS_LANGUAGE']]
+            return language[1] + ': ' + environ[language[0]]
+        return 'Tomato'
 
     @staticmethod
     def parse():
@@ -54,6 +80,7 @@ class Travis(CI):
             commit_hash=commit_hash,
             language="python",
             client="travis",
+            build_name=Travis.get_build_name()
         )
 
 
@@ -76,6 +103,7 @@ class CircleCi(CI):
             commit_hash=commit_hash,
             language="python",
             client="circle",
+            build_name='Tomato',
         )
 
 
@@ -97,6 +125,7 @@ class Appveyor(CI):
             commit_hash=commit_hash,
             language="python",
             client="appveyor",
+            build_name='Tomato',
         )
 
 
