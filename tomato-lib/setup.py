@@ -1,6 +1,6 @@
 from setuptools import setup
 
-install_requires = []
+install_requires = ['requests']
 
 
 try:

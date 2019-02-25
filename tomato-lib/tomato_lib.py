@@ -1,27 +1,33 @@
-import json
+# import json
 import logging
 import sys
 from os import environ
 
-try:
-    from urllib2 import urlopen, Request
-except ImportError:
-    from urllib.request import urlopen, Request
+# try:
+#     from urllib2 import urlopen, Request
+# except ImportError:
+#     from urllib.request import urlopen, Request
+import requests
 
 logger = logging.getLogger("tomato")
 URL = environ.get('TOMATO_URL', 'https://tomato-bot.com') + '/api/v1/junit/notifications'
 
 
 def post(data):
-    body = json.dumps(data).encode('utf-8')
-    logger.warning(body)
-    logger.warning(json.dumps(dict(environ)))
-    clen = len(body)
-    req = Request(URL, body, {'Content-Type': 'application/json', 'Content-Length': clen})
-    f = urlopen(req)
-    response = f.read()
-    f.close()
-    logger.warning(response)
+    response = requests.post(
+        url=URL,
+        json=data,
+    )
+    logger.warning(response.text)
+    # body = json.dumps(data).encode('utf-8')
+    # logger.warning(body)
+    # logger.warning(json.dumps(dict(environ)))
+    # clen = len(body)
+    # req = Request(URL, body, {'Content-Type': 'application/json', 'Content-Length': clen})
+    # f = urlopen(req)
+    # response = f.read()
+    # f.close()
+    # logger.warning(response)
 
 
 class CI(object):
