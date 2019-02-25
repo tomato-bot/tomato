@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-version = '1.0.13'
+version = '1.0.14'
 install_requires = [f"tomato-lib=={version}"]
 
 
