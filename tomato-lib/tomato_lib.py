@@ -1,4 +1,5 @@
 # import json
+import json
 import logging
 import sys
 from os import environ
@@ -14,9 +15,11 @@ URL = environ.get('TOMATO_URL', 'https://tomato-bot.com') + '/api/v1/junit/notif
 
 
 def post(data):
+    headers = {'content-type': 'application/json'}
     response = requests.post(
         url=URL,
-        json=data,
+        data=json.dumps(data),
+        headers=headers,
     )
     logger.warning(response.text)
     # body = json.dumps(data).encode('utf-8')
