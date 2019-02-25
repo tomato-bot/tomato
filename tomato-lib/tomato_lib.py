@@ -1,36 +1,41 @@
-# import json
 import json
 import logging
 import sys
 from os import environ
 
-# try:
-#     from urllib2 import urlopen, Request
-# except ImportError:
-#     from urllib.request import urlopen, Request
-import requests
+try:
+    from urllib2 import urlopen, Request
+except ImportError:
+    from urllib.request import urlopen, Request
 
 logger = logging.getLogger("tomato")
 URL = environ.get('TOMATO_URL', 'https://tomato-bot.com') + '/api/v1/junit/notifications'
 
 
+def post_using_curl(body):
+    from subprocess import check_output
+    check_output(['curl', '-H', 'Content-Type: application/json', '-X', 'POST',
+                  'https://tomato-bot.com/api/v1/junit/notifications', '-d', body])
+    return
+
+
 def post(data):
-    headers = {'content-type': 'application/json'}
-    response = requests.post(
-        url=URL,
-        data=json.dumps(data),
-        headers=headers,
-    )
-    logger.warning(response.text)
-    # body = json.dumps(data).encode('utf-8')
-    # logger.warning(body)
-    # logger.warning(json.dumps(dict(environ)))
-    # clen = len(body)
-    # req = Request(URL, body, {'Content-Type': 'application/json', 'Content-Length': clen})
-    # f = urlopen(req)
-    # response = f.read()
-    # f.close()
-    # logger.warning(response)
+    body = json.dumps(data).encode('utf-8')
+    # tomato-bot is using some new SSL features like SNI
+    # Travis python version in non-python build is pretty old and canno't send SSL 1.2 requests
+    # https://travis-ci.community/t/default-python-version-in-non-python-envirments/2453
+    if sys.version_info < (2, 7, 10):
+        logger.warning('Old python version detected, using CURL to send')
+        post_using_curl(body)
+        return
+    logger.warning(body)
+    logger.warning(json.dumps(dict(environ)))
+    clen = len(body)
+    req = Request(URL, body, {'Content-Type': 'application/json', 'Content-Length': clen})
+    f = urlopen(req)
+    response = f.read()
+    f.close()
+    logger.warning(response)
 
 
 class CI(object):
