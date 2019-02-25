@@ -85,12 +85,10 @@ class Travis(CI):
     @staticmethod
     def parse():
         owner, repo = environ['TRAVIS_REPO_SLUG'].split('/')
-        issue_id = environ['TRAVIS_PULL_REQUEST']
         commit_hash = environ['TRAVIS_PULL_REQUEST_SHA']
         return dict(
             owner=owner,
             repo=repo,
-            issue_id=issue_id,
             commit_hash=commit_hash,
             language="python",
             client="travis",
@@ -108,12 +106,10 @@ class CircleCi(CI):
     def parse():
         owner = environ['CIRCLE_PROJECT_USERNAME']
         repo = environ['CIRCLE_PROJECT_REPONAME']
-        issue_id = environ['CIRCLE_PULL_REQUEST'].rsplit('/')[-1]
         commit_hash = environ['CIRCLE_SHA1']
         return dict(
             owner=owner,
             repo=repo,
-            issue_id=issue_id,
             commit_hash=commit_hash,
             language="python",
             client="circle",
@@ -130,12 +126,10 @@ class Appveyor(CI):
     def parse():
         owner = environ['APPVEYOR_ACCOUNT_NAME']
         repo = environ['APPVEYOR_PROJECT_NAME']
-        issue_id = environ['APPVEYOR_PULL_REQUEST_NUMBER']
         commit_hash = environ['APPVEYOR_PULL_REQUEST_HEAD_COMMIT']
         return dict(
             owner=owner,
             repo=repo,
-            issue_id=issue_id,
             commit_hash=commit_hash,
             language="python",
             client="appveyor",
